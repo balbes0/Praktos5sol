@@ -1,0 +1,242 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f4f4f4;
+    color: #333;
+}
+
+.header {
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    color: white;
+    padding: 20px 0;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    margin: 0;
+    text-align: center;
+}
+
+.navbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px; /* Разделение между элементами */
+}
+
+.balance {
+    color: white;
+    margin-right: 10px;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: rgb(0, 148, 223);
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.nav-link:hover {
+    background-color: #008ecc;
+}
+
+.public-key-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.public-key-input {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    background-color: white;
+    color: #333;
+}
+
+.logout-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #dc3545;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+    background-color: #c82333;
+}
+
+.main-content {
+    padding: 20px 0;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    width: 300px;
+}
+
+.card-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 15px;
+}
+
+.card-content h3 {
+    margin-top: 0;
+}
+
+.card-content p {
+    margin: 10px 0 0;
+}
+
+.price {
+    font-weight: bold;
+    margin-top: 10px;
+    color: #4facfe;
+}
+
+.button-group {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 5px; /* Добавлено для разделения кнопок */
+}
+
+.button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex: 1; /* Добавлено для равномерного распределения кнопок */
+}
+
+.buy-button {
+    background-color: #28a745;
+}
+
+.buy-button:hover {
+    background-color: #218838;
+}
+
+.edit-button {
+    background-color: #ffc107;
+}
+
+.edit-button:hover {
+    background-color: #e0a800;
+}
+
+.edit-button-ad{
+    background-color: #4facfe;
+}
+
+.edit-button-ad:hover {
+    background-color: #006ece;
+}
+
+.delete-button {
+    background-color: #dc3545;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+.navbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px; /* Добавлено для разделения между ссылками */
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: rgb(0, 148, 223);
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    width: auto; /* Изменено на auto */
+}
+
+/* Добавлено новое правило для выравнивания текста внутри кнопок */
+.nav-link,
+.logout-button {
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Указываем фиксированную ширину кнопок в навигационном меню */
+.nav-link {
+    min-width: 200px; /* Вы можете изменить эту ширину по вашему усмотрению */
+}
+
+.balance {
+    color: white;
+    margin-right: 10px;
+}
+
+.public-key-container {
+    display: flex;
+    align-items: center;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: rgb(0, 148, 223);
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    width: auto;
+    height: 100%; /* Устанавливаем высоту кнопок равной 100% */
+    display: flex; /* Используем flex для выравнивания текста по вертикали */
+    align-items: center; /* Выравниваем текст по вертикали */
+}
+
+.bottom-center {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgb(0, 148, 223);
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 16px;
+    color: white;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кошелек</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/wallet.css') }}">
+</head>
+<body>
+    <form method="post" class="back-form">
+        <input type="hidden" name="action" value="back">
+        <button type="submit" class="back-button">Назад</button>
+    </form>
+    <div class="wallet-container">
+        <h1>Ваш кошелек</h1>
+        <div class="balance">
+            <h2>Баланс на аккаунте:</h2>
+            <p>{{ balance_account }} ETH.</p>
+        </div>
+        <div class="balance">
+            <h2>Баланс на контракте:</h2>
+            <p>{{ balance_contract }} ETH.</p>
+        </div>
+        <div class="button-container">
+            <form method="post">
+                <input type="hidden" name="action" value="withdraw">
+                <input type="number" name="withdraw_amount" placeholder="Сумма для вывода" class="input-field">
+                <button type="submit" class="button">Вывести баланс с контракта</button>
+            </form>
+            <form method="post">
+                <input type="hidden" name="action" value="deposit">
+                <input type="number" name="deposit_amount" placeholder="Сумма для пополнения" class="input-field">
+                <button type="submit" class="button">Пополнить баланс контракта</button>
+            </form>
+        </div>
+        {% if message %}
+            <div>{{ message }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>

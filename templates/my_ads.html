@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Свои объявления</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my_ads.css') }}">
+</head>
+<body>
+    <form method="post" class="back-form">
+        <input type="hidden" name="action" value="back">
+        <button type="submit" class="back-button">Назад</button>
+    </form>
+    <div class="ad-container">
+        <h1>Свои объявления</h1>
+        <div class="cards-container">
+            {% for id, price, id_estate, owner, buyer, date, status in myads %}
+            <div class="card">
+                <div class="card-content">
+                    <h3>ID Advertisement: {{ id }}</h3>
+                    <p>Price: {{ price }}</p>
+                    <p>ID Estate: {{ id_estate }}</p>
+                    <p>Покупатель: {{ buyer }}</p>
+                    <p>Дата: {{ date }}</p>
+                    <p>Статус: {{ status }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

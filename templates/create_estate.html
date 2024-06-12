@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание недвижимости</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/create_estate.css') }}">
+</head>
+<body>
+    <form method="post" class="back-form">
+        <input type="hidden" name="action" value="back">
+        <button type="submit" class="back-button">Назад</button>
+    </form>
+    <div class="real-estate-container">
+        <h1>Создание недвижимости</h1>
+        <form method="post">
+            <input type="hidden" name="action" value="create_real_estate">
+            <input type="text" name="address" placeholder="Адрес" class="input-field" required>
+            <input type="number" name="street_number" placeholder="Номер улицы" class="input-field" required>
+            <select name="property_type" class="input-field" required>
+                <option value="" disabled selected>Выберите тип недвижимости</option>
+                <option value="House">Дом</option>
+                <option value="Flat">Квартира</option>
+                <option value="Loft">Лофт</option>
+                <option value="Dacha">Дача</option>
+            </select>
+            <button type="submit" class="button">Создать недвижимость</button>
+        </form>
+        {% if message %}
+            <div>{{ message }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>

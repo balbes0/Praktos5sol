@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Изменение статуса объявления</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/create_ad.css') }}">
+</head>
+<body>
+    <form method="post" class="back-form">
+        <input type="hidden" name="action" value="back">
+        <button type="submit" class="back-button">Назад</button>
+    </form>
+    <div class="ad-container">
+        <h1>Изменение статуса объявления</h1>
+        <form method="post">
+            <input type="hidden" name="action" value="edit_ad">
+            <input type="number" name="id_ad" placeholder="ID Объявления" class="input-field" value="{{ ID_AD }}" required>
+            <select name="property_type" class="input-field" required>
+                <option value="" disabled selected>Выберите статус объявления</option>
+                <option value="Opened">Открыт</option>
+                <option value="Closed">Закрыт</option>
+            </select>
+            <button type="submit" class="button">Изменить статус</button>
+        </form>
+        {% if message %}
+            <div>{{ message }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>

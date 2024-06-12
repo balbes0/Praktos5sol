@@ -1,0 +1,82 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+    color: white;
+    position: relative;
+}
+
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: #4facfe;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.back-button:hover {
+    background-color: #4facfe;
+    color: #ffffff;
+}
+
+.wallet-container,
+.real-estate-container {
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 40px;
+}
+
+.balance {
+    margin-bottom: 20px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.input-field,
+.button {
+    width: 300px; /* одинаковая ширина для полей и кнопок */
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+.input-field {
+    border: none;
+    margin-bottom: 10px;
+}
+
+.button {
+    border: none;
+    background-color: #ffffff;
+    color: #4facfe;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.button:hover {
+    background-color: #4facfe;
+    color: #ffffff;
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Основная страница</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Платформа недвижимости</h1>
+            <nav class="navbar">
+                <a href="#" class="nav-link" onclick="location.href='{{ url_for('create_ad') }}'">Создание объявления</a>
+                <a href="#" class="nav-link" onclick="location.href='{{ url_for('create_estate') }}'">Создание недвижимости</a>
+                <a href="#" class="nav-link" onclick="location.href='{{ url_for('edit_ad') }}'">Изменение объявлений</a>
+                <a href="#" class="nav-link" onclick="location.href='{{ url_for('edit_estate') }}'">Изменение недвижимости</a>
+                <a href="#" class="nav-link" onclick="location.href='{{ url_for('wallet') }}'">Кошелек</a>
+                <a href="#" class="nav-link" onclick="location.href='{{ url_for('my_ads') }}'">Свои объявления</a>
+                <a href="#" class="nav-link" onclick="location.href='{{ url_for('my_estates') }}'">Свои недвижимости</a>
+                <div class="public-key-container">
+                    <span class="balance">Баланс: {{ balance }} ETH.</span>
+                    <input type="text" class="public-key-input" value="{{ public_key }}" readonly>
+                    <button class="logout-button" onclick="location.href='{{ url_for('index') }}'">Выйти</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <main class="main-content">
+        <div class="container">
+            <h2>Список доступных объявлений</h2>
+            <div class="card-container">
+                {% for addr, num, type, owner, status, id, price, id_ad, status_ad in notmyad %}
+                    <div class="card">
+                        <div class="card-content">
+                            <h3>Тип: {{ type }}</h3>
+                            <p>ID Estate: {{ id }}</p>
+                            <p>ID Ad: {{ id_ad }}</p>
+                            <p>Улица: {{ addr }}, {{ num }}</p>
+                            <p>Статус: {{ status_ad }}</p>
+                            <p class="price">Цена: {{ price }} ETH.</p>
+                            <div class="button-group">
+                                <form method="post" action="{{ url_for('main', public_key=public_key) }}" class="button-group">
+                                    <input type="hidden" name="action" value="buy_estate">
+                                    <input type="hidden" name="estate_id" value="{{ id }}">
+                                    <input type="hidden" name="ad_id" value="{{ id_ad }}">
+                                    <button type="submit" class="button buy-button">Купить</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                {% for addr, num, type, owner, status, id, price, id_ad, status_ad in myad %}
+                <div class="card">
+                    <div class="card-content">
+                        <h3>Тип: {{ type }}</h3>
+                        <p>ID Estate: {{ id }}</p>
+                        <p>ID Ad: {{ id_ad }}</p>
+                        <p>Улица: {{ addr }}, {{ num }}</p>
+                        <p>Статус: {{ status_ad }}</p>
+                        <p class="price">Цена: {{ price }} ETH.</p>
+                        <div class="button-group">
+                            <form method="post" action="{{ url_for('main', public_key=public_key) }}" class="button-group">
+                                <input type="hidden" name="action" value="edit_ad">
+                                <input type="hidden" name="estate_id" value="{{ id }}">
+                                <input type="hidden" name="ad_id" value="{{ id_ad }}">
+                                <button type="submit" class="button edit-button-ad">Edit ad</button>
+                            </form>
+                            <form method="post" action="{{ url_for('main', public_key=public_key) }}" class="button-group">
+                                <input type="hidden" name="action" value="edit_estate">
+                                <input type="hidden" name="estate_id" value="{{ id }}">
+                                <input type="hidden" name="ad_id" value="{{ id_ad }}">
+                                <button type="submit" class="button edit-button">Edit estate</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+    {% if message %}
+        <div class="bottom-center">
+            <p>{{ message }}</p>
+        </div>
+    {% endif %}
+</body>
+</html>

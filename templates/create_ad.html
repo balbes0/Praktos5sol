@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание объявления</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/create_ad.css') }}">
+</head>
+<body>
+    <form method="post" class="back-form">
+        <input type="hidden" name="action" value="back">
+        <button type="submit" class="back-button">Назад</button>
+    </form>
+    <div class="ad-container">
+        <h1>Создание объявления</h1>
+        <form method="post">
+            <input type="hidden" name="action" value="create_ad">
+            <input type="number" name="price" placeholder="Цена" class="input-field" required>
+            <input type="text" name="estate_id" placeholder="ID недвижимости" class="input-field" required>
+            <button type="submit" class="button">Создать объявление</button>
+        </form>
+        {% if message %}
+            <div>{{ message }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>
