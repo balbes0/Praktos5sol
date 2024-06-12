@@ -13,179 +13,123 @@ start_capital = "0xEd16A0890751E5B6A54b9Ba4D4A3Bcde6EF2c775"
 def give_balance_to_user(public_key):
     try:
         w3.eth.send_transaction({'to': public_key, 'from': start_capital, 'value': w3.to_wei(10, 'ether')})
-    except:
-        pass
+    except Exception as e:
+        print(f"Error giving balance: {e}")
 
 def check_password_complexity(password):
-    if len(password) >= 12 and re.search(r'[A-Z]', password) and re.search(r'[a-z]', password) and re.search(r'[0-9]', password):
-        return True
-    else:
-        return False
+    return len(password) >= 12 and re.search(r'[A-Z]', password) and re.search(r'[a-z]', password) and re.search(r'[0-9]', password)
 
 def get_public_key(_public_key):
-    public_key = Web3.to_checksum_address(_public_key)
-    return public_key
+    return Web3.to_checksum_address(_public_key)
 
 def login_sol(public_key, password):
     try:
         checksum_public_key = Web3.to_checksum_address(public_key)
         w3.geth.personal.unlock_account(checksum_public_key, password)
         return True
-    except:
+    except Exception as e:
+        print(f"Login error: {e}")
         return False
-    
+
 def register_sol(password):
     try:
         account = w3.geth.personal.new_account(password)
         give_balance_to_user(account)
         with open('info.txt', 'a', encoding="utf-8") as f:
-            f.write('\nПубличный ключ: {}, пароль: {}'.format(account, password))
+            f.write(f'\nПубличный ключ: {account}, пароль: {password}')
         return True
-    except:
+    except Exception as e:
+        print(f"Registration error: {e}")
         return False
 
-def createEstate(account, address, square, type):
+def create_estate_main(account, address, square, type):
     try:
-        tx_hash = contract.functions.createEstate(address, square, type).transact({
-            "from": account
-        })
-        return(f"Транзакция отправлена: {tx_hash.hex()}")
+        tx_hash = contract.functions.createEstate(address, square, type).transact({"from": account})
+        return f"Транзакция отправлена: {tx_hash.hex()}"
     except Exception as e:
         error_message = str(e).split(': ')[1].split(',')[0].strip("'")
-        return(f"Ошибка при создании недвижимости: {error_message}")
+        return f"Ошибка при создании недвижимости: {error_message}"
 
-
-def GetAvailableAdvertisements():
+def get_estates():
     try:
-        toReturn = []
-        estates = getEstates()
+        estates = contract.functions.getEstates().call()
+        estate_types = ["Дом", "Квартира", "Промышленный объект", "Дача"]
+        statuses = ["Неактивный", "Активный"]
+        to_return = [(estate[0], estate[1], estate_types[estate[2]], estate[3], statuses[estate[4]], estate[5]) for estate in estates]
+        return to_return if to_return else ["Список недвижимостей пуст"]
+    except Exception as e:
+        return [f"Ошибка при просмотре недвижимости: {e}"]
+
+def get_available_advertisements():
+    try:
         ads = contract.functions.getAds().call()
+        estates = get_estates()
+        available_ads = []
         for ad in ads:
             for estate in estates:
                 if ad[2] == estate[5] and estate[4] == "Активный" and ad[6] == 0:
-                    if ad[6] == 0:
-                        status = "Открыт"
-                    else:
-                        status = "Закрыт"
-                    extended_estate = estate + (ad[1],ad[0],status,)
-                    toReturn.append(extended_estate)
-        return toReturn
+                    status = "Открыт" if ad[6] == 0 else "Закрыт"
+                    extended_estate = estate + (ad[1], ad[0], status)
+                    available_ads.append(extended_estate)
+        return available_ads
     except Exception as e:
-        return(f"{e}")
+        print(f"Error fetching available ads: {e}")
+        return []
 
-def getEstates():
-    try:
-        estates = contract.functions.getEstates().call()
-        toReturn = []
-        if len(estates) > 0:
-            for estate in estates:
-                if estate[2] == 0:
-                    estate_type = "Дом"
-                elif estate[2] == 1:
-                    estate_type = "Квартира"
-                elif estate[2] == 2:
-                    estate_type = "Промышленный объект"
-                elif estate[2] == 3:
-                    estate_type = "Дача"
-                if estate[4] == True:
-                    status = "Активный"
-                elif estate[4] == False:
-                    status = "Неактивный"
-                estate_info = (estate[0], estate[1], estate_type, estate[3], status, estate[5])
-                toReturn.append(estate_info)
-            return toReturn
-        else:
-            return ("Список недвижимостей пуст",)
-    except Exception as e:
-        return (f"Ошибка при просмотре недвижимости: {e}",)
-
-def createAd(account, price, estateid):
+def create_ad_main(account, price, estateid):
     try:
         date = int(datetime.now().strftime("%d%m%Y"))
-        tx_hash = contract.functions.createAd(price, estateid, date).transact({
-            "from": account
-        })
-        return(f"Транзакция отправлена: {tx_hash.hex()}")
+        tx_hash = contract.functions.createAd(price, estateid, date).transact({"from": account})
+        return f"Транзакция отправлена: {tx_hash.hex()}"
     except Exception as e:
         error_message = str(e).split(': ')[1].split(',')[0].strip("'")
-        return(f"Ошибка при создании недвижимости: {error_message}")
+        return f"Ошибка при создании недвижимости: {error_message}"
 
-
-def GetMyEstates(account):
+def get_my_estates(account):
     try:
         estates = contract.functions.getEstates().call()
-        my_estates = []
-        
-        for estate in estates:
-            if estate[3] == account:
-                modified_estate = list(estate)
-                if estate[2] == 0:
-                    type = "Дом"
-                elif estate[2] == 1:
-                    type = "Квартира"
-                elif estate[2] == 2:
-                    type = "Промышленный объект"
-                elif estate[2] == 3:
-                    type = "Дача"
-                modified_estate[2] = type
-                if estate[4] == True:
-                    status = "Активный"
-                elif estate[4] == False:
-                    status = "Неактивный"
-                modified_estate[4] = status
-                my_estates.append(modified_estate)
-        
+        estate_types = ["Дом", "Квартира", "Промышленный объект", "Дача"]
+        statuses = ["Неактивный", "Активный"]
+        my_estates = [list(estate) for estate in estates if estate[3] == account]
+        for estate in my_estates:
+            estate[2] = estate_types[estate[2]]
+            estate[4] = statuses[estate[4]]
         return my_estates
     except Exception as e:
         print(f"An error occurred: {e}")
         return []
 
-
-def updateEstateStatus(account, id, status):
+def update_estate_status(account, id, status):
     try:
-        GetMyEstates(account)
-        estates = contract.functions.getEstates().call()
-        myestatesID = []
-        for estate in estates:
-            if estate[3] == account:
-                myestatesID.append(estate[5])
-        if id in myestatesID:
-            contract.functions.updateEstateActive(id, status).transact({
-                "from": account
-            })
-            return("Статус недвижимости был успешно изменен!")
+        my_estates = get_my_estates(account)
+        my_estate_ids = [estate[5] for estate in my_estates]
+        if id in my_estate_ids:
+            contract.functions.updateEstateActive(id, status).transact({"from": account})
+            return "Статус недвижимости был успешно изменен!"
         else:
-            return("Такой недвижимости не существует или вы не его владелец!")
+            return "Такой недвижимости не существует или вы не его владелец!"
     except Exception as e:
         error_message = str(e).split(': ')[1].split(',')[0].strip("'")
-        return(f"Ошибка при изменени статуса недвижимости: {error_message}")
+        return f"Ошибка при изменении статуса недвижимости: {error_message}"
 
-def GetMyAds(account):
+def get_my_ads(account):
     try:
         ads = contract.functions.getAds().call()
-        myAds = []
-        if len(ads) > 0:
-            for ad in ads:
-                if ad[3] == account:
-                    modified_ad = list(ad)
-                    if ad[4] == "0x0000000000000000000000000000000000000000":
-                        modified_ad[4] = "Отсутствует"
-                    if ad[6] == 0:
-                        modified_ad[6] = "Открыт"
-                    elif ad[6] == 1:
-                        modified_ad[6] = "Закрыт"
-                    myAds.append(modified_ad)
-        return myAds
-    except:
+        ad_statuses = ["Открыт", "Закрыт"]
+        my_ads = [list(ad) for ad in ads if ad[3] == account]
+        for ad in my_ads:
+            ad[4] = "Отсутствует" if ad[4] == "0x0000000000000000000000000000000000000000" else ad[4]
+            ad[6] = ad_statuses[ad[6]]
+        return my_ads
+    except Exception as e:
+        print(f"An error occurred: {e}")
         return []
 
-
-def updateAdStatus(account, id, status):
+def update_ad_status(account, id, status):
     try:
-        myAds = GetMyAds(account)
-        myAdsID = [ad[3] for ad in myAds]
-        
-        if account in myAdsID:
+        my_ads = get_my_ads(account)
+        my_ad_ids = [ad[0] for ad in my_ads]
+        if id in my_ad_ids:
             contract.functions.updateAdType(id, status).transact({"from": account})
             return "Статус объявления был успешно изменен"
         else:
@@ -194,50 +138,40 @@ def updateAdStatus(account, id, status):
         error_message = str(e).split(': ')[1].split(',')[0].strip("'")
         return f"Ошибка при изменении статуса объявления: {error_message}"
 
-    
-def GetBalanceOnContract(account):
+def get_balance_on_contract(account):
     try:
-        balance = contract.functions.getBalance().call({
-            "from": account
-        })
-        return(balance)
-    except:
+        return contract.functions.getBalance().call({"from": account})
+    except Exception as e:
+        print(f"Error fetching balance: {e}")
         return 0
 
 def deposit(account, amount):
     try:
-        tx_hash = contract.functions.deposit().transact({
-            "from": account,
-            "value": amount
-        })
-        return(f"Транзакция отправлена: {tx_hash.hex()}, счет: {account}")
+        tx_hash = contract.functions.deposit().transact({"from": account, "value": amount})
+        return f"Транзакция отправлена: {tx_hash.hex()}, счет: {account}"
     except Exception as e:
         error_message = str(e).split(': ')[1].split(',')[0].strip("'")
-        return(f"Ошибка при депозите средств на контракт: {error_message}")
+        return f"Ошибка при депозите средств на контракт: {error_message}"
 
-def WithDraw(account, amount):
+def withdraw(account, amount):
     try:
-        tx_hash = contract.functions.withdraw(amount).transact({
-            "from": account
-        })
-        return(f"Транзакция отправлена: {tx_hash.hex()}")
+        tx_hash = contract.functions.withdraw(amount).transact({"from": account})
+        return f"Транзакция отправлена: {tx_hash.hex()}"
     except Exception as e:
         error_message = str(e).split(': ')[1].split(',')[0].strip("'")
-        return(f"Ошибка при выводе средств: {error_message}")
+        return f"Ошибка при выводе средств: {error_message}"
 
-def GetBalanceOnAccount(account):
+def get_balance_on_account(account):
     try:
-        balance = w3.eth.get_balance(account)
-        return(balance)
-    except:
+        return w3.eth.get_balance(account)
+    except Exception as e:
+        print(f"Error fetching balance: {e}")
         return 0
 
-def BuyEstate(account, id):
+def buy_estate(account, id):
     try:
-        tx_hash = contract.functions.buyEstate(id).transact({
-            "from": account
-        })
-        return(f"Недвижимость было успешно куплена, транзакция отправлена: {tx_hash.hex()}")
+        tx_hash = contract.functions.buyEstate(id).transact({"from": account})
+        return f"Недвижимость была успешно куплена, транзакция отправлена: {tx_hash.hex()}"
     except Exception as e:
         error_message = str(e).split(': ')[1].split(',')[0].strip("'")
-        return(f"Ошибка при покупке недвижимости: {error_message}")
+        return f"Ошибка при покупке недвижимости: {error_message}"

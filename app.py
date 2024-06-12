@@ -55,18 +55,18 @@ def main(public_key):
     
     myad = []
     notmyad = []
-    list = GetAvailableAdvertisements()
+    list = get_available_advertisements()
     for ad in list:
         if ad[3] == public_key:
             myad.append(ad)
         else:
             notmyad.append(ad)
-    balance = GetBalanceOnContract(public_key)
+    balance = get_balance_on_contract(public_key)
     if request.method == 'POST':
         action = request.form.get('action')
         if action == 'buy_estate':
             ad_id = int(request.form.get('ad_id'))
-            result = BuyEstate(public_key, ad_id)
+            result = buy_estate(public_key, ad_id)
             return render_template("main.html", public_key=public_key, balance=balance, notmyad=notmyad, myad=myad, message=result)
         if action == 'edit_ad':
             ad_id = int(request.form.get('ad_id'))
@@ -83,8 +83,8 @@ def wallet():
     if not public_key:
         return redirect(url_for('index'))
     
-    balance_account = GetBalanceOnAccount(public_key)
-    balance_contract = GetBalanceOnContract(public_key)
+    balance_account = get_balance_on_account(public_key)
+    balance_contract = get_balance_on_contract(public_key)
 
     if request.method == 'POST':
         action = request.form.get('action')
@@ -92,15 +92,15 @@ def wallet():
             return redirect(url_for('main', public_key=public_key))
         if action == 'withdraw':
             amount = int(request.form.get('withdraw_amount'))
-            result = WithDraw(public_key, amount)
-            balance_account = GetBalanceOnAccount(public_key)
-            balance_contract = GetBalanceOnContract(public_key)
+            result = withdraw(public_key, amount)
+            balance_account = get_balance_on_account(public_key)
+            balance_contract = get_balance_on_contract(public_key)
             return render_template("wallet.html", message=result, balance_account=balance_account, balance_contract=balance_contract)
         if action == 'deposit':
             amount = int(request.form.get('deposit_amount'))
             result = deposit(public_key, amount)
-            balance_account = GetBalanceOnAccount(public_key)
-            balance_contract = GetBalanceOnContract(public_key)
+            balance_account = get_balance_on_account(public_key)
+            balance_contract = get_balance_on_contract(public_key)
             return render_template("wallet.html", message=result, balance_account=balance_account, balance_contract=balance_contract)
 
     return render_template("wallet.html", balance_account=balance_account, balance_contract=balance_contract)
@@ -127,7 +127,7 @@ def create_estate():
                 type_index = 2
             elif type == "Dacha":
                 type_index = 3
-        result = createEstate(public_key, address, street_num, type_index)
+        result = create_estate_main(public_key, address, street_num, type_index)
         return render_template("create_estate.html", message=result)
     return render_template("create_estate.html")
 
@@ -144,7 +144,7 @@ def create_ad():
         if action == 'create_ad':
             price = int(request.form.get('price'))
             estate_id = int(request.form.get('estate_id'))
-            result = createAd(public_key, price, estate_id)
+            result = create_ad_main(public_key, price, estate_id)
             return render_template("create_ad.html", message=result)
     return render_template("create_ad.html")
 
@@ -168,7 +168,7 @@ def edit_ad():
             elif type == "Closed":
                 status = 1
 
-            result = updateAdStatus(public_key, id_ad, status)
+            result = update_ad_status(public_key, id_ad, status)
             return render_template("edit_ad.html", message=result)
     return render_template("edit_ad.html", ID_AD=ID_AD)
 
@@ -192,7 +192,7 @@ def edit_estate():
             elif type == "Closed":
                 status = False
 
-            result = updateEstateStatus(public_key, id_estate, status)
+            result = update_estate_status(public_key, id_estate, status)
             return render_template("edit_estate.html", message=result)
     return render_template("edit_estate.html", ID_ESTATE=ID_ESTATE)
 
@@ -207,7 +207,7 @@ def my_ads():
         if action == 'back':
             return redirect(url_for('main', public_key=public_key))
         
-    myads = GetMyAds(public_key)
+    myads = get_my_ads(public_key)
 
     return render_template("my_ads.html", myads=myads)
 
@@ -222,7 +222,7 @@ def my_estates():
         if action == 'back':
             return redirect(url_for('main', public_key=public_key))
 
-    my_estates = GetMyEstates(public_key)
+    my_estates = get_my_estates(public_key)
 
     return render_template("my_estates.html", myestates=my_estates)
 
