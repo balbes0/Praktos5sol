@@ -14,7 +14,7 @@ def give_balance_to_user(public_key):
     try:
         w3.eth.send_transaction({'to': public_key, 'from': start_capital, 'value': w3.to_wei(10, 'ether')})
     except Exception as e:
-        print(f"Error giving balance: {e}")
+        print(f"Ошибка при переводе баланса: {e}")
 
 def check_password_complexity(password):
     return len(password) >= 12 and re.search(r'[A-Z]', password) and re.search(r'[a-z]', password) and re.search(r'[0-9]', password)
@@ -39,7 +39,7 @@ def register_sol(password):
             f.write(f'\nПубличный ключ: {account}, пароль: {password}')
         return True
     except Exception as e:
-        print(f"Registration error: {e}")
+        print(f"Ошибка при регистрации: {e}")
         return False
 
 def create_estate_main(account, address, square, type):
@@ -73,7 +73,7 @@ def get_available_advertisements():
                     available_ads.append(extended_estate)
         return available_ads
     except Exception as e:
-        print(f"Error fetching available ads: {e}")
+        print(f"Ошибка при получении доступных объявлений.: {e}")
         return []
 
 def create_ad_main(account, price, estateid):
@@ -96,7 +96,7 @@ def get_my_estates(account):
             estate[4] = statuses[estate[4]]
         return my_estates
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"Произошла ошибка: {e}")
         return []
 
 def update_estate_status(account, id, status):
@@ -122,7 +122,7 @@ def get_my_ads(account):
             ad[6] = ad_statuses[ad[6]]
         return my_ads
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"Произошла ошибка: {e}")
         return []
 
 def update_ad_status(account, id, status):
@@ -142,7 +142,7 @@ def get_balance_on_contract(account):
     try:
         return contract.functions.getBalance().call({"from": account})
     except Exception as e:
-        print(f"Error fetching balance: {e}")
+        print(f"Ошибка получения баланса: {e}")
         return 0
 
 def deposit(account, amount):
@@ -165,7 +165,7 @@ def get_balance_on_account(account):
     try:
         return w3.eth.get_balance(account)
     except Exception as e:
-        print(f"Error fetching balance: {e}")
+        print(f"Ошибка получения баланса: {e}")
         return 0
 
 def buy_estate(account, id):
